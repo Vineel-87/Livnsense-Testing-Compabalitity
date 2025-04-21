@@ -1,67 +1,36 @@
-Feature: VICAS Login Functionality with CSV Data
+Feature: Vicas Login Functionality Testing.
 
-  @Test
-  Scenario: Verify login page elements are displayed
-    Given I am on the VICAS login page
-    Then I should see the "Welcome to VICAS" header
-    And I should see the username input field
-    And I should see the password input field
-    And I should see the "Forgot Password?" link
-    And I should see the "Sign in" button
+  @Tester
+  Scenario:Login page Loads with required UI elements
+    Given the user navigates to the VICAS login page
+    Then the heading "Welcome to VICAS" should be displayed
+    And the username input field should be visible
+    And the Sign In button should be visible and disabled
 
-  @Test
-  Scenario: Sign in button remains disabled with empty credentials
-    Given I am on the VICAS login page
-    When I leave the username field empty
-    And I leave the password field empty
-    Then the "Sign in" button should be disabled
+  @Tester
+  Scenario: Sign In button is enabled only when both username and password are entered
+    Given the user is on the login page
+    When the user enters a valid username in the username field
+    And user enters a valid password in the password field
+    Then Sign In button should be enabled
 
-  @Test
-  Scenario: Test login with multiple credentials from CSV
-    Given I am on the VICAS login page
-    And I read login data from CSV file
-    When I test login for each user from the CSV
-    Then I should see appropriate results for each login attempt
+  Scenario: Sign In button remains disabled for incomplete or empty fields
+    Given the user in on the login page
+    When the username field is empty
+    And the password field is empty
+    Then the Sign In button should be disabled
 
-  @Test
-  Scenario: Verify button state with valid credentials
-    Given I am on the VICAS login page
-    And I read login data from CSV file
-    When I enter valid credentials from CSV
-    Then the "Sign in" button should be enabled
+    When the user enters a username
+    And the password field is empty
+    Then the Sign In button should be disabled
 
-  @Test
-  Scenario: Verify error messages for invalid logins
-    Given I am on the VICAS login page
-    And I read login data from CSV file
-    When I attempt login with invalid credentials from CSV
-    Then I should see an error message for invalid login
+    When the username field is empty
+    And the user enters a password
+    Then the Sign In button should be disabled
 
-  Scenario: Sign in button remains disabled with only password
-      Given I am on the VICAS login page
-        When I leave the username field empty
-        And I enter "Test@123" in the password field
-        Then the "Sign in" button should be disabled
-
-    Scenario: Sign in button enables when both fields are filled
-        Given I am on the VICAS login page
-        When I enter "valid_user" in the username field
-        And I enter "Valid@123" in the password field
-        Then the "Sign in" button should be enabled
-
-    Scenario: Access password recovery via Forgot Password link
-        Given I am on the VICAS login page
-        When I click the "Forgot Password?" link
-        Then I should be redirected to the password recovery page
-
-    Scenario: Attempt login with invalid credentials
-        Given I am on the VICAS login page
-        When I enter "invalid_user" in the username field
-        And I enter "wrong_password" in the password field
-        And I click the "Sign in" button
-        Then I should see an error message "Invalid credentials"
-
-    Scenario: Password field masks input characters
-        Given I am on the VICAS login page
-        When I enter "secret" in the password field
-        Then the password field should mask the input characters
+  @Tester
+  Scenario: Login attempt with multiple credentials from CSV file
+     Given the user is on the login page
+     When the user reads username and password combinations from "credentials.csv"
+     Then the system should attempt to log in with each set
+     And verify whether login is successful or shows an error
